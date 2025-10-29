@@ -691,7 +691,7 @@ See `QUANTUM_HYDRA_RESULTS.md` for actual experimental results on PhysioNet EEG 
    - QSVT-based attention mechanisms
    - https://arxiv.org/html/2406.04305v1
 
-4. **Park et al. (2024)** - "Quantum Time-series Transformer"
+4. **Park et al. (2025)** - "Quantum Time-series Transformer"
    - Application of QSVT/LCU to time-series
    - https://arxiv.org/html/2509.00711v1
 
@@ -702,11 +702,11 @@ See `QUANTUM_HYDRA_RESULTS.md` for actual experimental results on PhysioNet EEG 
 If you use this code in your research, please cite:
 
 ```bibtex
-@software{quantum_hydra_2024,
+@software{quantum_hydra_2025,
   author = {Park, Junghoon},
   title = {Quantum Hydra: Two Approaches to Quantum State-Space Models},
-  year = {2024},
-  url = {https://github.com/yourusername/quantum-hydra}
+  year = {2025},
+  url = {https://github.com/JHPark9090/quantum-hydra}
 }
 ```
 
@@ -716,7 +716,7 @@ If you use this code in your research, please cite:
 
 For questions or issues:
 - Open an issue on GitHub
-- Email: [your email]
+- Email: utopie9090@snu.ac.kr
 - See `compare_quantum_hydra.py` for experimental setup
 - See `QUANTUM_HYDRA_RESULTS.md` for performance benchmarks
 
