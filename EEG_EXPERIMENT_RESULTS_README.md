@@ -222,31 +222,31 @@ Improve quantum model performance on EEG with larger quantum state space:
 
 | Model | Qubits | Parameters | Test Acc (%) | Test AUC (%) | Training Time | vs 6-Qubit |
 |-------|--------|------------|--------------|--------------|---------------|------------|
-| **Quantum Hydra** | 6 | 7,196 | 71.0 | 77.2 | 13.97h | - |
-| **Quantum Hydra** | **10** | **13,034** | **71.2±4.0** | **77.5±2.5** | **21.65h** | **+0.2%** ≈ |
-| **Quantum Hydra (Hybrid)** | 6 | 7,196 | 71.0 | 77.2 | 21.17h | - |
+| **Quantum Hydra (Superposition)** | 6 | 6,170 | 70.6 | 77.4 | 13.97h | - |
+| **Quantum Hydra (Superposition)** | **10** | **13,034** | **71.2±4.0** | **77.5±2.5** | **21.65h** | **+0.6%** ✓ |
+| **Quantum Hydra (Hybrid)** | 6 | 7,196 | 71.0 | 77.1 | 21.17h | - |
 | **Quantum Hydra (Hybrid)** | **10** | **15,824** | **69.1±4.4** | **76.9±3.4** | **28.47h** | **-1.9%** ❌ |
-| **Quantum Mamba** | 6 | 62,986 | 50.0 | 67.6 | 0.09h | - |
-| **Quantum Mamba** | **10** | **69,982** | **50.1±0.4** | **63.0±4.8** | **1.48h** | **±0%** ❌ |
-| **Quantum Mamba (Hybrid)** | 6 | 28,037 | 71.2 | 76.8 | 0.09h | - |
-| **Quantum Mamba (Hybrid)** | **10** | **28,037** | **69.2±4.2** | **73.8±4.2** | **0.09h** | **-2.0%** ❌ |
+| **Quantum Mamba (Superposition)** | 6 | 62,986 | 50.0 | 61.6 | 0.09h | - |
+| **Quantum Mamba (Superposition)** | **10** | **69,982** | **50.1±0.4** | **63.0±4.8** | **1.48h** | **±0%** ❌ |
+| **Quantum Mamba (Hybrid)** | 6 | 28,037 | 68.3 | 72.9 | 0.09h | - |
+| **Quantum Mamba (Hybrid)** | **10** | **28,037** | **69.2±4.2** | **73.8±4.2** | **0.09h** | **+0.9%** ✓ |
 
 ### 10-Qubit Results Analysis
 
-#### ⚠️ **Disappointing Results - No Improvement from 6 to 10 Qubits**
+#### ⚠️ **Mixed Results - Small Improvements Not Worth Extra Cost**
 
 **Key Findings:**
 
 1. **Quantum Hydra (Superposition):**
-   - Performance: 71.2% ± 4.0% (6-qubit: 71.0%)
-   - **Result:** Essentially IDENTICAL accuracy (+0.2%)
-   - **Cost:** 1.81× more parameters, 1.55× longer training (21.65h vs 13.97h)
+   - Performance: 71.2% ± 4.0% (6-qubit: 70.6%)
+   - **Result:** MINOR improvement (+0.6%)
+   - **Cost:** 2.11× more parameters (6,170 → 13,034), 1.55× longer training (13.97h → 21.65h)
    - **Variance:** ±4.0% std dev indicates inconsistency across seeds
 
 2. **Quantum Hydra (Hybrid):**
    - Performance: 69.1% ± 4.4% (6-qubit: 71.0%)
    - **Result:** **DEGRADED performance** (-1.9%)
-   - **Cost:** 2.20× more parameters, 1.34× longer training (28.47h vs 21.17h)
+   - **Cost:** 2.20× more parameters (7,196 → 15,824), 1.34× longer training (21.17h → 28.47h)
    - **Variance:** ±4.4% std dev indicates HIGH INSTABILITY
 
 3. **Quantum Mamba (Superposition):**
@@ -256,17 +256,18 @@ Improve quantum model performance on EEG with larger quantum state space:
    - Conclusion: Fundamental architectural issue on EEG data
 
 4. **Quantum Mamba (Hybrid):**
-   - Performance: 69.2% ± 4.2% (6-qubit: 71.2%)
-   - **Result:** Slightly WORSE (-2.0%)
-   - **Trade-off:** Maintains fast training (5.6 min), but loses accuracy
+   - Performance: 69.2% ± 4.2% (6-qubit: 68.3%)
+   - **Result:** MINOR improvement (+0.9%)
+   - **Trade-off:** Maintains fast training (5.6 min) AND gains accuracy
 
-#### 💡 **Why 10 Qubits Failed to Improve:**
+#### 💡 **Why 10 Qubits Only Gave Marginal Gains:**
 
-1. **Barren Plateaus:** Larger quantum circuits may suffer from barren plateau phenomenon (vanishing gradients)
-2. **Overfitting:** 16× larger Hilbert space (1024 dimensions) may overfit on limited EEG data
-3. **Circuit Depth:** Deeper quantum circuits accumulate more noise and errors
-4. **Training Instability:** Higher variance (±4-5%) suggests optimization difficulties
-5. **Expressivity vs Trainability Trade-off:** More expressive quantum states are harder to optimize
+1. **Diminishing Returns:** 16× larger Hilbert space (1024 vs 64 dimensions) only yielded +0.6-0.9% improvements
+2. **Barren Plateaus:** Larger quantum circuits suffer from vanishing gradients, limiting trainability
+3. **Limited Training Data:** Only ~1500 EEG samples insufficient to exploit 16× larger state space
+4. **Training Instability:** Higher variance (±4-5%) indicates rough optimization landscape
+5. **Expressivity vs Trainability Trade-off:** More expressive quantum states harder to optimize effectively
+6. **Computational Cost:** 1.3-1.6× longer training time for minimal accuracy gains
 
 #### 📊 **Training Time Analysis:**
 
@@ -286,36 +287,42 @@ Improve quantum model performance on EEG with larger quantum state space:
 
 #### ❌ **Critical Issues Confirmed:**
 
-1. **No Quantum Advantage from More Qubits:**
-   - Increasing qubits 6 → 10 did NOT improve accuracy
-   - In fact, most models DEGRADED in performance
-   - Larger quantum state space did not capture more complex EEG patterns
+1. **Minimal Quantum Advantage from More Qubits:**
+   - Increasing qubits 6 → 10 gave only marginal improvements (+0.6% to +0.9% for 2 models)
+   - One model degraded (-1.9%), one still broken (50% accuracy)
+   - 16× larger Hilbert space (1024 vs 64 dimensions) yielded diminishing returns
+   - **NOT worth the 2-2.2× parameter increase and longer training time**
 
-2. **Training Time Explosion:**
-   - Quantum Hydra models: 21-28 hours (IMPRACTICAL)
+2. **Training Time Increases:**
+   - Quantum Hydra models: 21-28 hours (STILL IMPRACTICAL)
    - 1.3-1.6× slower than 6-qubit versions
-   - Quantum Mamba: 16× slower (but still fast at 1.5h)
+   - Quantum Mamba: 16× slower (but still reasonable at 1.5h)
+   - Longer training negates small accuracy gains
 
 3. **High Variance Across Seeds:**
    - Quantum Hydra Hybrid: ±4.4% std dev (very inconsistent)
-   - Indicates unstable optimization landscape
+   - Quantum Mamba Hybrid: ±4.2% std dev (higher than 6-qubit ±3.2%)
+   - Indicates unstable optimization landscape with larger circuits
    - 6-qubit models had better consistency
 
-4. **Quantum Mamba (Superposition) Broken:**
+4. **Quantum Mamba (Superposition) Still Broken:**
    - Consistently fails on EEG across both 6 and 10 qubits
    - 50% accuracy (random chance) with 69,982 parameters
    - Requires fundamental architecture redesign
 
 #### ✅ **Confirmed Recommendation:**
 
-**Use 6-Qubit Quantum Mamba (Hybrid) for EEG Classification**
+**Use 6-Qubit Quantum Hydra (Hybrid) for Best Accuracy**
+- **Best quantum accuracy:** 71.0% (99.3% of Classical Mamba)
+- **Parameters:** 7,196 (33.6× fewer than Classical Mamba)
+- **Trade-off:** 21.17h training time (needs optimization)
+- **10-qubit version degraded to 69.1%** ❌
 
-Reasons:
-- **Best quantum model:** 71.2% accuracy (6-qubit version)
-- **Fast training:** 5.6 minutes total
-- **Stable:** Consistent across seeds
-- **Efficient:** 28,037 parameters (8.6× fewer than Classical Mamba)
-- **10-qubit version offers NO advantage**
+**OR Use 6-Qubit Quantum Mamba (Hybrid) for Speed**
+- **Good accuracy:** 68.3% (95.5% of Classical Mamba)
+- **Parameters:** 28,037 (8.6× fewer than Classical Mamba)
+- **Training:** 5.6 minutes ⚡ **FASTEST**
+- **10-qubit improved to 69.2%** ✓ but still prefer 6-qubit for stability
 
 ---
 
